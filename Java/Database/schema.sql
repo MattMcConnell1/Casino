@@ -1,0 +1,59 @@
+CREATE TABLE Users (
+    UserID SERIAL PRIMARY KEY,
+    Username VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) NOT NULL,
+    PasswordHash VARCHAR(255) NOT NULL,
+    Balance DECIMAL(10, 2) DEFAULT 0,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    LastLogin TIMESTAMP
+);
+
+CREATE TABLE Games (
+    GameID SERIAL PRIMARY KEY,
+    StartTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    EndTime TIMESTAMP,
+    BlindLevels VARCHAR(255),
+    BuyIn DECIMAL(10, 2),
+    Status VARCHAR(50) DEFAULT 'waiting'
+);
+
+CREATE TABLE UserGames (
+    UserGameID SERIAL PRIMARY KEY,
+    UserID INT REFERENCES Users(UserID),
+    GameID INT REFERENCES Games(GameID),
+    Result VARCHAR(50),
+    FinalPosition INT
+);
+
+CREATE TABLE Transactions (
+    TransactionID SERIAL PRIMARY KEY,
+    UserID INT REFERENCES Users(UserID),
+    Amount DECIMAL(10, 2),
+    Type VARCHAR(50),
+    Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE GameActions (
+    ActionID SERIAL PRIMARY KEY,
+    GameID INT REFERENCES Games(GameID),
+    UserID INT REFERENCES Users(UserID),
+    ActionType VARCHAR(50),
+    Amount DECIMAL(10, 2),
+    Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE PlayerHands (
+    HandID SERIAL PRIMARY KEY,
+    GameID INT REFERENCES Games(GameID),
+    UserID INT REFERENCES Users(UserID),
+    Cards VARCHAR(255),
+    HandResult VARCHAR(50)
+);
+
+CREATE TABLE ChatMessages (
+    MessageID SERIAL PRIMARY KEY,
+    GameID INT REFERENCES Games(GameID),
+    UserID INT REFERENCES Users(UserID),
+    Message TEXT,
+    Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
